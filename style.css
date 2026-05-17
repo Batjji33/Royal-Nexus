@@ -213,3 +213,42 @@ body::before {
 .ball-spinning {
   animation: ballSpiral 3s cubic-bezier(0.1, 0.85, 0.25, 1) forwards;
 }
+
+/* Mobile Menu Drawer */
+#mobile-nav-menu {
+  position: fixed;
+  top: 64px;
+  left: 0;
+  right: 0;
+  background: rgba(13, 13, 13, 0.96);
+  backdrop-filter: blur(10px);
+  border-bottom: 1px solid rgba(201, 168, 76, 0.15);
+  display: flex;
+  flex-direction: column;
+  gap: 16px;
+  padding: 24px;
+  z-index: 99;
+  transform: translateY(-110%);
+  transition: transform 0.3s cubic-bezier(0.1, 0.9, 0.2, 1);
+  box-shadow: 0 10px 30px rgba(0, 0, 0, 0.5);
+  pointer-events: none;
+}
+#mobile-nav-menu.active {
+  transform: translateY(0);
+  pointer-events: auto;
+}
+.mobile-menu-btn {
+  display: none;
+  background: transparent;
+  border: none;
+  color: var(--gold-primary);
+  font-size: 24px;
+  cursor: pointer;
+  padding: 4px 8px;
+  outline: none;
+}
+@media (max-width: 768px) {
+  .mobile-menu-btn {
+    display: block;
+  }
+}
