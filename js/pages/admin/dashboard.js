@@ -7,7 +7,10 @@ async function renderAdminDashboard() {
   const sessions = await getGameSessions();
 
   const totalPlayers = profiles.length;
-  const totalCoins = profiles.reduce((sum, p) => sum + p.balance_coins, 0);
+  
+  // Calculate total coins in circulation across all accounts in the database (including admins)
+  const { data: allProfiles } = await db.from('profiles').select('balance_coins');
+  const totalCoins = (allProfiles || []).reduce((sum, p) => sum + Number(p.balance_coins || 0), 0);
   
   const pendingPurchases = coinOrders.filter(o => o.status === 'pending');
   const pendingWithdrawals = withdrawals.filter(w => w.status === 'pending');
