@@ -12,6 +12,7 @@ async function loadJackpot() {
 
 // Appelée après chaque fin de partie
 async function incrementJackpot() {
+  if (isAdmin()) return;
   await db.rpc('increment_jackpot');
   jackpotCurrent = Math.min(jackpotCurrent + 1, 300);
   updateJackpotDisplays();
@@ -31,12 +32,14 @@ function updateJackpotDisplays() {
 
 // Vérification victoire Roulette (numéro 7)
 async function checkRouletteJackpot(result) {
+  if (isAdmin()) return;
   if (String(result) !== '7') return;
   await awardJackpot();
 }
 
 // Vérification victoire Slots (Lucky 7)
 async function checkSlotsJackpot(symbolId) {
+  if (isAdmin()) return;
   if (symbolId !== 'seven') return;
   await awardJackpot();
 }
