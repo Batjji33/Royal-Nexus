@@ -250,6 +250,7 @@ async function cashOutCrash(isAuto = false) {
   try {
     await processGame(currentProfile.id, currentProfile.username, 'crash', crashBet, gainCoins, netCoins, desc);
     await refreshProfile();
+    await incrementJackpot();
     await checkExplorerBonus();
   } catch (e) {
     // Annulation en cas d'erreur de base de données
@@ -280,6 +281,7 @@ async function handleCrash() {
   try {
     await processGame(currentProfile.id, currentProfile.username, 'crash', crashBet, 0, -crashBet, desc);
     await refreshProfile();
+    await incrementJackpot();
     await checkExplorerBonus();
   } catch (e) {
     // Réintégration en cas d'erreur

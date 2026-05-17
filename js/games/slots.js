@@ -42,6 +42,13 @@ async function renderSlots() {
   <div style="max-width:900px;margin:0 auto;padding:32px 24px;text-align:center;">
     <div style="text-align:left;margin-bottom:24px;">
       <a href="#/lobby" style="color:var(--text-muted);font-family:'Jost';font-size:13px;text-decoration:none;">← Retour au Lobby</a>
+      
+      <div class="jackpot-badge" style="margin-top:16px;">
+        <span>♦</span>
+        <span>Jackpot : <strong>${formatCoins(jackpotCurrent)}</strong></span>
+        <span style="color:#5A5040;">—</span>
+        <span style="color:#5A5040;">Lucky 7</span>
+      </div>
     </div>
 
     <div class="slots-card">
@@ -172,6 +179,8 @@ async function spinSlots() {
   try {
     await processGame(currentProfile.id, currentProfile.username, 'slots', totalCost, gainCoins, netCoins, desc);
     await refreshProfile();
+    await incrementJackpot();
+    if (won) await checkSlotsJackpot(midRow[0].id);
     await checkExplorerBonus();
     
     if (won) {

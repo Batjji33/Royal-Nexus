@@ -356,3 +356,59 @@ body::before {
     border-radius: 8px;
   }
 }
+
+@keyframes jackpotPulse {
+  0%, 100% { transform: scale(1);    text-shadow: 0 0 20px rgba(201,168,76,.5); }
+  50%       { transform: scale(1.04); text-shadow: 0 0 50px rgba(201,168,76,1), 0 0 80px rgba(201,168,76,.3); }
+}
+@keyframes jackpotGlow {
+  0%, 100% { box-shadow: 0 0 15px rgba(201,168,76,.15); }
+  50%       { box-shadow: 0 0 35px rgba(201,168,76,.35); }
+}
+@keyframes jackpotFall {
+  0%   { transform: translateY(-20px) rotate(0deg);   opacity: 1; }
+  100% { transform: translateY(110vh) rotate(720deg); opacity: 0; }
+}
+@keyframes jackpotEntrance {
+  from { opacity: 0; transform: scale(.8) translateY(20px); }
+  to   { opacity: 1; transform: scale(1) translateY(0); }
+}
+.jackpot-value {
+  font-family: 'Cormorant Garamond', serif;
+  font-weight: 700;
+  font-size: clamp(36px, 6vw, 52px);
+  color: #C9A84C;
+  animation: jackpotPulse 2.5s ease-in-out infinite;
+  display: inline-block;
+}
+.jackpot-banner {
+  background: linear-gradient(135deg, #0D0D0D, #1a1200);
+  border: 1px solid rgba(201,168,76,.3);
+  border-radius: 12px;
+  padding: 24px 32px;
+  animation: jackpotGlow 3s ease-in-out infinite;
+  margin-bottom: 28px;
+}
+.jackpot-badge {
+  background: rgba(201,168,76,.08);
+  border: 1px solid rgba(201,168,76,.25);
+  border-radius: 6px;
+  padding: 8px 14px;
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  font-family: 'Jost', sans-serif;
+  font-size: 13px;
+  color: #C9A84C;
+  margin-bottom: 16px;
+}
+.jackpot-particle {
+  position: fixed;
+  top: -20px;
+  font-size: 20px;
+  animation: jackpotFall linear infinite;
+  pointer-events: none;
+  z-index: 9998;
+  user-select: none;
+  color: #C9A84C;
+}

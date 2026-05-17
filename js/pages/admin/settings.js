@@ -94,6 +94,47 @@ async function renderAdminSettings() {
         <button class="btn-gold" style="padding:8px 16px;font-size:13px;" onclick="saveBonusSettings()">Enregistrer le bonus</button>
       </div>
 
+      <!-- Jackpot Progressif -->
+      <div class="card">
+        <h3 style="font-family:'Cinzel',serif;color:#C9A84C;font-size:17px;margin-bottom:6px;">
+          ♦ Jackpot Progressif
+        </h3>
+        <p style="font-family:'Jost',sans-serif;color:#5A5040;font-size:12px;margin-bottom:20px;">
+          Le jackpot grossit après chaque partie et se réinitialise après une victoire.
+        </p>
+
+        <div style="display:grid;grid-template-columns:repeat(auto-fit,minmax(180px,1fr));gap:16px;margin-bottom:20px;">
+          <div>
+            <label style="color:#A89A7A;font-size:13px;display:block;margin-bottom:5px;">Valeur actuelle</label>
+            <input id="jp-current" type="number" min="0" class="input-gold" value="${settings.jackpot_current||50}">
+          </div>
+          <div>
+            <label style="color:#A89A7A;font-size:13px;display:block;margin-bottom:5px;">Incrément</label>
+            <input id="jp-increment" type="number" min="1" class="input-gold" value="${settings.jackpot_increment||1}">
+          </div>
+          <div>
+            <label style="color:#A89A7A;font-size:13px;display:block;margin-bottom:5px;">Départ après victoire</label>
+            <input id="jp-seed" type="number" min="1" class="input-gold" value="${settings.jackpot_seed||50}">
+          </div>
+          <div>
+            <label style="color:#A89A7A;font-size:13px;display:block;margin-bottom:5px;">Plafond max</label>
+            <input id="jp-max" type="number" min="1" class="input-gold" value="${settings.jackpot_max||300}">
+          </div>
+        </div>
+
+        <div style="display:flex;gap:12px;flex-wrap:wrap;">
+          <button class="btn-gold" style="padding:8px 16px;font-size:13px;" onclick="saveJackpotSettings()">
+            Enregistrer
+          </button>
+          <button class="btn-outline-gold" style="padding:8px 16px;font-size:13px;" onclick="resetJackpot()">
+            Réinitialiser au seed
+          </button>
+        </div>
+        <p style="font-family:'Jost',sans-serif;color:#5A5040;font-size:12px;margin-top:14px;">
+          Déclencheur : Lucky 7 aux Slots ou numéro 7 à la Roulette.
+        </p>
+      </div>
+
     </div>
   `;
 
@@ -177,4 +218,37 @@ async function saveBonusSettings() {
   } catch(e) {
     toastError('Erreur lors de la sauvegarde.');
   }
+}
+
+async function saveJackpotSettings() {
+  const current   = document.getElementById('jp-current')?.value;
+  const increment = document.getElementById('jp-increment')?.value;
+  const seed      = document.getElementById('jp-seed')?.value;
+  const max       = document.getElementById('jp-max')?.value;
+
+  if ([current, increment, seed, max].some(v => !v || isNaN(v) || parseInt(v) < 1)) {
+    toastError('Valeurs invalides.'); return;
+  }
+
+  await Promise.all([
+    updateSetting('jackpot_current',   current),
+    updateSetting('jackpot_increment', increment),
+    updateSetting('jackpot_seed',      seed),
+    updateSetting('jackpot_max',       max),
+  ]);
+
+  jackpotCurrent = parseInt(current);
+  updateJackpotDisplays();
+  toastSuccess('✅ Jackpot mis à jour.');
+}
+
+async function resetJackpot() {
+  const seed = document.getElementById('jp-seed')?.value
+    || (await getSettings()).jackpot_seed
+    || '50';
+  await updateSetting('jackpot_current', seed);
+  document.getElementById('jp-current').value = seed;
+  jackpotCurrent = parseInt(seed);
+  updateJackpotDisplays();
+  toastSuccess('✅ Jackpot réinitialisé à ' + seed + ' coins.');
 }

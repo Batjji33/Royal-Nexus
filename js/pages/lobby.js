@@ -94,6 +94,25 @@ async function renderLobby() {
       </p>
     </div>
     ${warningBanner}
+    
+    <div class="jackpot-banner">
+      <div style="display:flex;align-items:center;justify-content:space-between;flex-wrap:wrap;gap:16px;">
+        <div>
+          <div style="font-family:'Cinzel',serif;color:#C9A84C;font-size:13px;
+            letter-spacing:2px;margin-bottom:8px;">♦ JACKPOT PROGRESSIF</div>
+          <div class="jackpot-value">${formatCoins(jackpotCurrent)}</div>
+          <p style="font-family:'Jost',sans-serif;color:#5A5040;font-size:12px;margin-top:6px;">
+            Décrochez-le avec Lucky 7 aux Slots ou le numéro 7 à la Roulette
+          </p>
+        </div>
+        <div style="text-align:right;">
+          <div style="font-family:'Cormorant Garamond',serif;color:#A89A7A;font-size:14px;font-style:italic;">
+            Grossit à chaque partie jouée
+          </div>
+        </div>
+      </div>
+    </div>
+    
     <!-- Cards jeux -->
     <div style="display:grid;grid-template-columns:repeat(auto-fit,minmax(300px,1fr));gap:24px;">
       ${lobbyCard('Roulette Américaine','Misez sur les couleurs, les numéros ou les douzaines',

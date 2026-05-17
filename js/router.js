@@ -46,5 +46,7 @@ async function router() {
 window.addEventListener('hashchange', router);
 window.addEventListener('load', async () => {
   await initAuth();
+  await loadJackpot();
+  subscribeJackpot();
   router();
 });

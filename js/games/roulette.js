@@ -99,6 +99,13 @@ async function renderRoulette() {
 
   <div style="max-width:1100px;margin:0 auto;padding:32px 24px;">
     <a href="#/lobby" style="color:var(--text-muted);font-family:'Jost';font-size:13px;text-decoration:none;">← Retour au Lobby</a>
+    
+    <div class="jackpot-badge" style="margin-top:16px;">
+      <span>♦</span>
+      <span>Jackpot : <strong>${formatCoins(jackpotCurrent)}</strong></span>
+      <span style="color:#5A5040;">—</span>
+      <span style="color:#5A5040;">Numéro 7</span>
+    </div>
     <div style="display:grid;grid-template-columns:repeat(auto-fit,minmax(280px,1fr));gap:32px;margin-top:24px;" id="roulette-grid">
       
       <!-- COLONNE GAUCHE : Roue + résultat -->
@@ -316,6 +323,8 @@ async function spinRoulette() {
   try {
     await processGame(currentProfile.id, currentProfile.username, 'roulette', bet, gainCoins, netCoins, desc);
     await refreshProfile();
+    await incrementJackpot();
+    await checkRouletteJackpot(result);
     await checkExplorerBonus();
     const colorHex = colorStr==='red'?'#f87171':colorStr==='green'?'#4ade80':'var(--text-secondary)';
     document.getElementById('roulette-result').innerHTML = `
