@@ -12,7 +12,12 @@ async function renderAdminHistory() {
   const profitPercent = totalMise > 0 ? ((profitMaison / totalMise) * 100).toFixed(1) : 0;
 
   const html = `
-    <h1 style="font-family:'Cinzel';color:var(--gold-primary);font-size:28px;margin-bottom:32px;">Historique global</h1>
+    <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:32px;flex-wrap:wrap;gap:16px;">
+      <h1 style="font-family:'Cinzel';color:var(--gold-primary);font-size:28px;margin:0;">Historique global</h1>
+      <button id="btn-reset-history" onclick="confirmResetHistory()" class="btn-outline-gold" style="padding:8px 16px;font-size:13px;border-color:#f87171;color:#f87171;">
+        Réinitialiser l'historique
+      </button>
+    </div>
     
     <div style="display:flex;gap:12px;margin-bottom:24px;">
       <button onclick="navigatePage('#/admin/history?filter=all')" class="${filter==='all'?'btn-gold':'btn-outline-gold'}" style="padding:6px 16px;font-size:13px;">Tous</button>
@@ -66,4 +71,46 @@ async function renderAdminHistory() {
   `;
 
   render(adminLayout('#/admin/history', html));
+}
+
+let resetHistState = 0;
+let resetHistTimeout = null;
+
+async function confirmResetHistory() {
+  const btn = document.getElementById('btn-reset-history');
+  if (!btn) return;
+
+  if (resetHistState === 0) {
+    resetHistState = 1;
+    btn.textContent = '⚠️ Confirmer ?';
+    btn.style.backgroundColor = 'rgba(248,113,113,0.1)';
+    btn.style.borderColor = '#ef4444';
+    btn.style.color = '#ef4444';
+    
+    resetHistTimeout = setTimeout(() => {
+      resetHistState = 0;
+      btn.textContent = "Réinitialiser l'historique";
+      btn.style.backgroundColor = 'transparent';
+      btn.style.borderColor = '#f87171';
+      btn.style.color = '#f87171';
+    }, 4000);
+  } else {
+    clearTimeout(resetHistTimeout);
+    resetHistState = 0;
+    btn.disabled = true;
+    btn.textContent = 'Réinitialisation...';
+    
+    try {
+      await resetGameSessions();
+      toastSuccess('✅ Historique réinitialisé avec succès.');
+      await renderAdminHistory();
+    } catch(e) {
+      toastError("Erreur lors de la réinitialisation de l'historique.");
+      btn.disabled = false;
+      btn.textContent = "Réinitialiser l'historique";
+      btn.style.backgroundColor = 'transparent';
+      btn.style.borderColor = '#f87171';
+      btn.style.color = '#f87171';
+    }
+  }
 }

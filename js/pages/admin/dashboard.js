@@ -50,8 +50,11 @@ async function renderAdminDashboard() {
     </div>
 
     <div class="card" style="padding:0;overflow:hidden;">
-      <div style="padding:20px;border-bottom:1px solid rgba(201,168,76,0.15);">
+      <div style="padding:20px;border-bottom:1px solid rgba(201,168,76,0.15);display:flex;justify-content:space-between;align-items:center;">
         <h3 style="font-family:'Cinzel';color:var(--gold-primary);font-size:16px;">Activité récente (10 dernières parties)</h3>
+        <button id="btn-reset-stats" onclick="confirmResetStats()" class="btn-outline-gold" style="padding:5px 12px;font-size:11px;border-color:#f87171;color:#f87171;">
+          Réinitialiser les stats
+        </button>
       </div>
       <div style="overflow-x:auto;">
         <table class="table-royal">
@@ -80,4 +83,46 @@ async function renderAdminDashboard() {
   `;
 
   render(adminLayout('#/admin', html));
+}
+
+let resetState = 0;
+let resetTimeout = null;
+
+async function confirmResetStats() {
+  const btn = document.getElementById('btn-reset-stats');
+  if (!btn) return;
+
+  if (resetState === 0) {
+    resetState = 1;
+    btn.textContent = '⚠️ Confirmer ?';
+    btn.style.backgroundColor = 'rgba(248,113,113,0.1)';
+    btn.style.borderColor = '#ef4444';
+    btn.style.color = '#ef4444';
+    
+    resetTimeout = setTimeout(() => {
+      resetState = 0;
+      btn.textContent = 'Réinitialiser les stats';
+      btn.style.backgroundColor = 'transparent';
+      btn.style.borderColor = '#f87171';
+      btn.style.color = '#f87171';
+    }, 4000);
+  } else {
+    clearTimeout(resetTimeout);
+    resetState = 0;
+    btn.disabled = true;
+    btn.textContent = 'Réinitialisation...';
+    
+    try {
+      await resetGameSessions();
+      toastSuccess('✅ Toutes les statistiques ont été réinitialisées.');
+      await renderAdminDashboard();
+    } catch(e) {
+      toastError('Erreur de réinitialisation.');
+      btn.disabled = false;
+      btn.textContent = 'Réinitialiser les stats';
+      btn.style.backgroundColor = 'transparent';
+      btn.style.borderColor = '#f87171';
+      btn.style.color = '#f87171';
+    }
+  }
 }

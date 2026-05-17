@@ -171,3 +171,8 @@ async function getAllProfiles() {
   const { data } = await db.from('profiles').select('*').eq('is_admin', false).order('created_at', { ascending: false });
   return data || [];
 }
+
+async function resetGameSessions() {
+  const { error } = await db.from('game_sessions').delete().neq('username', '');
+  if (error) throw error;
+}
