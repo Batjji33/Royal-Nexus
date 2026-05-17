@@ -44,14 +44,14 @@ async function renderSlots() {
       <a href="#/lobby" style="color:var(--text-muted);font-family:'Jost';font-size:13px;text-decoration:none;">← Retour au Lobby</a>
     </div>
 
-    <div class="card" style="display:inline-block;padding:32px;background:#111111;border-color:rgba(201,168,76,0.4);box-shadow:inset 0 0 40px rgba(0,0,0,0.8);">
+    <div class="slots-card">
       <div id="slots-grid" style="display:grid;grid-template-columns:repeat(3, 1fr);gap:16px;">
         <!-- Initial Grid -->
         ${Array.from({length:3}).map(() => `
-          <div style="display:flex;flex-direction:column;gap:12px;">
-            <div style="font-size:40px;opacity:0.3;filter:blur(1px);">🍒</div>
-            <div style="font-size:60px;border:2px solid var(--gold-primary);border-radius:12px;padding:20px;background:#1a1a1a;box-shadow:0 0 20px rgba(201,168,76,0.2);">🍋</div>
-            <div style="font-size:40px;opacity:0.3;filter:blur(1px);">🔔</div>
+          <div class="slots-column">
+            <div class="slots-symbol-bg">🍒</div>
+            <div class="slots-symbol-main">🍋</div>
+            <div class="slots-symbol-bg">🔔</div>
           </div>
         `).join('')}
       </div>
@@ -123,10 +123,10 @@ async function animateReels(grid) {
 
 function renderGridHTML(grid) {
   return grid.map((reel) => `
-    <div style="display:flex;flex-direction:column;gap:12px;align-items:center;">
-      <div style="font-size:40px;opacity:0.3;filter:blur(1px);">${reel[0].emoji}</div>
-      <div style="font-size:60px;border:2px solid var(--gold-primary);border-radius:12px;padding:20px;background:#1a1a1a;box-shadow:0 0 20px rgba(201,168,76,0.2);transform:scale(1.05);">${reel[1].emoji}</div>
-      <div style="font-size:40px;opacity:0.3;filter:blur(1px);">${reel[2].emoji}</div>
+    <div class="slots-column">
+      <div class="slots-symbol-bg">${reel[0].emoji}</div>
+      <div class="slots-symbol-main">${reel[1].emoji}</div>
+      <div class="slots-symbol-bg">${reel[2].emoji}</div>
     </div>
   `).join('');
 }

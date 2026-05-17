@@ -99,7 +99,7 @@ async function renderRoulette() {
 
   <div style="max-width:1100px;margin:0 auto;padding:32px 24px;">
     <a href="#/lobby" style="color:var(--text-muted);font-family:'Jost';font-size:13px;text-decoration:none;">← Retour au Lobby</a>
-    <div style="display:grid;grid-template-columns:1fr 1fr;gap:32px;margin-top:24px;" id="roulette-grid">
+    <div style="display:grid;grid-template-columns:repeat(auto-fit,minmax(280px,1fr));gap:32px;margin-top:24px;" id="roulette-grid">
       
       <!-- COLONNE GAUCHE : Roue + résultat -->
       <div class="card" style="display:flex;flex-direction:column;align-items:center;justify-content:center;min-height:360px;">

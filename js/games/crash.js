@@ -40,7 +40,7 @@ async function renderCrash() {
   <div style="max-width:1100px;margin:0 auto;padding:32px 24px;">
     <a href="#/lobby" style="color:var(--text-muted);font-family:'Jost';font-size:13px;text-decoration:none;">← Retour au Lobby</a>
     
-    <div style="display:grid;grid-template-columns:1fr 350px;gap:24px;margin-top:24px;" id="crash-layout">
+    <div style="display:grid;grid-template-columns:repeat(auto-fit,minmax(280px,1fr));gap:24px;margin-top:24px;" id="crash-layout">
       
       <!-- GAUCHE : Graphique -->
       <div class="card" style="display:flex;flex-direction:column;position:relative;min-height:400px;background:#050a05;border-color:rgba(74,222,128,0.2);">
