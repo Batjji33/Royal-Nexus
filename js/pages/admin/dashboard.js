@@ -1,16 +1,22 @@
 async function renderAdminDashboard() {
   render(adminLayout('#/admin', spinnerHTML()));
 
-  const profiles = await getAllProfiles();
-  const coinOrders = await getCoinOrders();
-  const withdrawals = await getWithdrawals();
-  const sessions = await getGameSessions();
+  const profiles = await getAllProfiles(); // Returns only non-admins
+  const nonAdminIds = new Set(profiles.map(p => p.id));
+  
+  const allCoinOrders = await getCoinOrders();
+  const coinOrders = allCoinOrders.filter(o => nonAdminIds.has(o.user_id));
+  
+  const allWithdrawals = await getWithdrawals();
+  const withdrawals = allWithdrawals.filter(w => nonAdminIds.has(w.user_id));
+  
+  const allSessions = await getGameSessions();
+  const sessions = allSessions.filter(s => nonAdminIds.has(s.user_id));
 
   const totalPlayers = profiles.length;
   
-  // Calculate total coins in circulation across all accounts in the database (including admins)
-  const { data: allProfiles } = await db.from('profiles').select('balance_coins');
-  const totalCoins = (allProfiles || []).reduce((sum, p) => sum + Number(p.balance_coins || 0), 0);
+  // Calculate total coins in circulation ONLY for non-admin players to exclude admin's testing balance
+  const totalCoins = profiles.reduce((sum, p) => sum + Number(p.balance_coins || 0), 0);
   
   const pendingPurchases = coinOrders.filter(o => o.status === 'pending');
   const pendingWithdrawals = withdrawals.filter(w => w.status === 'pending');

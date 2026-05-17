@@ -3,7 +3,12 @@ async function renderAdminHistory() {
   
   const filter = window.location.hash.includes('?filter=') ? window.location.hash.split('?filter=')[1] : 'all';
   
-  const allSessions = await getGameSessions();
+  const profiles = await getAllProfiles(); // Returns only non-admins
+  const nonAdminIds = new Set(profiles.map(p => p.id));
+  
+  const rawSessions = await getGameSessions();
+  const allSessions = rawSessions.filter(s => nonAdminIds.has(s.user_id));
+  
   const sessions = filter === 'all' ? allSessions : allSessions.filter(s => s.game_type === filter);
 
   const totalMise = sessions.reduce((sum, s) => sum + s.bet_coins, 0);
