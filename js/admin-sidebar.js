@@ -10,7 +10,7 @@ function renderAdminSidebar(activePage) {
 
   const linksHTML = links.map(l => {
     const active = activePage === l.href;
-    return `<a href="${l.href}" style="display:flex;align-items:center;gap:12px;padding:12px 20px;
+    return `<a href="${l.href}" onclick="closeAdminSidebar()" style="display:flex;align-items:center;gap:12px;padding:12px 20px;
       color:${active ? 'var(--gold-primary)' : 'var(--text-secondary)'};
       background:${active ? 'var(--bg-card)' : 'transparent'};
       border-left:2px solid ${active ? 'var(--gold-primary)' : 'transparent'};
@@ -20,7 +20,7 @@ function renderAdminSidebar(activePage) {
   }).join('');
 
   return `
-  <aside style="width:220px;min-height:100vh;background:#0D0D0D;border-right:1px solid rgba(201,168,76,0.15);display:flex;flex-direction:column;flex-shrink:0;">
+  <aside id="admin-sidebar" class="admin-sidebar">
     <div style="padding:20px;">
       <a href="#/lobby" style="color:var(--text-muted);font-family:'Jost';font-size:13px;text-decoration:none;">← Retour au Casino</a>
     </div>
@@ -34,11 +34,31 @@ function renderAdminSidebar(activePage) {
   </aside>`;
 }
 
+function toggleAdminSidebar() {
+  const sidebar = document.getElementById('admin-sidebar');
+  if (sidebar) {
+    sidebar.classList.toggle('active');
+  }
+}
+
+function closeAdminSidebar() {
+  const sidebar = document.getElementById('admin-sidebar');
+  if (sidebar) {
+    sidebar.classList.remove('active');
+  }
+}
+
 function adminLayout(activePage, contentHTML) {
   return `
-  <div style="display:flex;min-height:100vh;">
+  <div class="admin-mobile-header">
+    <button onclick="toggleAdminSidebar()" style="background:transparent;border:none;color:var(--gold-primary);font-size:20px;cursor:pointer;display:flex;align-items:center;gap:8px;font-family:'Jost';">
+      <span>☰</span> Menu Admin
+    </button>
+    <a href="#/lobby" style="color:var(--text-secondary);font-family:'Jost';font-size:13px;text-decoration:none;">Retour Casino</a>
+  </div>
+  <div class="admin-container">
     ${renderAdminSidebar(activePage)}
-    <main style="flex:1;padding:32px;overflow-y:auto;">
+    <main class="admin-main">
       ${contentHTML}
     </main>
   </div>`;
