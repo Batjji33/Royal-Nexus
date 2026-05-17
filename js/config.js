@@ -1,0 +1,2 @@
+const SUPABASE_URL = 'https://iwligdstuctnokewlnie.supabase.co';
+const SUPABASE_ANON_KEY = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6Iml3bGlnZHN0dWN0bm9rZXdsbmllIiwicm9sZSI6ImFub24iLCJpYXQiOjE3Nzg5NjAxNzEsImV4cCI6MjA5NDUzNjE3MX0.63-nxD_VGTkCbBpO6Hk4ekzETsHIYM0ugz-5s0zd3kw';

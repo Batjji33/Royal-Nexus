@@ -1,0 +1,215 @@
+:root {
+  --bg-primary:     #080808;
+  --bg-secondary:   #111111;
+  --bg-card:        #161616;
+  --bg-card-hover:  #1E1E1E;
+  --gold-primary:   #C9A84C;
+  --gold-light:     #E2C97E;
+  --gold-dark:      #8B6914;
+  --red-primary:    #8B0000;
+  --red-light:      #CC1111;
+  --text-primary:   #F5F0E8;
+  --text-secondary: #A89A7A;
+  --text-muted:     #5A5040;
+  --border-gold:    rgba(201, 168, 76, 0.25);
+}
+
+* { box-sizing: border-box; margin: 0; padding: 0; }
+
+body {
+  background-color: var(--bg-primary);
+  color: var(--text-primary);
+  font-family: 'Jost', sans-serif;
+  min-height: 100vh;
+}
+
+/* Grain texture */
+body::before {
+  content: '';
+  position: fixed;
+  inset: 0;
+  background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 256 256' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='noise'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23noise)' opacity='0.03'/%3E%3C/svg%3E");
+  pointer-events: none;
+  z-index: 0;
+}
+
+/* Typographie */
+.font-cinzel     { font-family: 'Cinzel', serif; }
+.font-cormorant  { font-family: 'Cormorant Garamond', serif; }
+
+/* Boutons */
+.btn-gold {
+  background: linear-gradient(135deg, #C9A84C, #8B6914);
+  color: #080808;
+  font-family: 'Jost', sans-serif;
+  font-weight: 600;
+  padding: 12px 28px;
+  border: none;
+  border-radius: 6px;
+  cursor: pointer;
+  transition: opacity 0.2s, transform 0.2s;
+}
+.btn-gold:hover { opacity: 0.9; transform: translateY(-1px); }
+.btn-gold:disabled { opacity: 0.4; cursor: not-allowed; transform: none; }
+
+.btn-outline-gold {
+  background: transparent;
+  color: var(--gold-primary);
+  border: 1px solid var(--gold-primary);
+  font-family: 'Jost', sans-serif;
+  font-weight: 500;
+  padding: 11px 28px;
+  border-radius: 6px;
+  cursor: pointer;
+  transition: background 0.2s;
+}
+.btn-outline-gold:hover { background: rgba(201,168,76,0.1); }
+
+.btn-danger {
+  background: var(--red-primary);
+  color: #fff;
+  border: none;
+  padding: 8px 18px;
+  border-radius: 6px;
+  cursor: pointer;
+  font-family: 'Jost', sans-serif;
+  transition: background 0.2s;
+}
+.btn-danger:hover { background: var(--red-light); }
+
+.btn-success {
+  background: #2D7A3A;
+  color: #fff;
+  border: none;
+  padding: 8px 18px;
+  border-radius: 6px;
+  cursor: pointer;
+  font-family: 'Jost', sans-serif;
+  transition: background 0.2s;
+}
+.btn-success:hover { background: #3a9648; }
+
+/* Cards */
+.card {
+  background: var(--bg-card);
+  border: 1px solid var(--border-gold);
+  border-radius: 10px;
+  padding: 24px;
+  transition: box-shadow 0.3s;
+}
+.card:hover { box-shadow: 0 0 25px rgba(201,168,76,0.1); }
+
+/* Inputs */
+.input-gold {
+  background: var(--bg-secondary);
+  border: 1px solid rgba(201,168,76,0.3);
+  color: var(--text-primary);
+  font-family: 'Jost', sans-serif;
+  padding: 10px 14px;
+  border-radius: 6px;
+  width: 100%;
+  outline: none;
+  transition: border-color 0.2s;
+}
+.input-gold:focus { border-color: var(--gold-primary); }
+
+/* Badges statut */
+.badge-pending  { background: rgba(180,130,0,0.2); color: #E2C97E; border: 1px solid rgba(180,130,0,0.4); padding: 3px 10px; border-radius: 4px; font-size: 12px; font-family: 'Jost'; }
+.badge-accepted { background: rgba(45,122,58,0.2); color: #4ade80; border: 1px solid rgba(45,122,58,0.4); padding: 3px 10px; border-radius: 4px; font-size: 12px; font-family: 'Jost'; }
+.badge-refused  { background: rgba(139,0,0,0.2);  color: #f87171; border: 1px solid rgba(139,0,0,0.4);  padding: 3px 10px; border-radius: 4px; font-size: 12px; font-family: 'Jost'; }
+
+/* Séparateur or */
+.divider-gold { border: none; border-top: 1px solid rgba(201,168,76,0.2); margin: 20px 0; }
+
+/* Spinner */
+.spinner {
+  width: 32px; height: 32px;
+  border: 2px solid rgba(201,168,76,0.3);
+  border-top-color: var(--gold-primary);
+  border-radius: 50%;
+  animation: spin 0.8s linear infinite;
+}
+@keyframes spin { to { transform: rotate(360deg); } }
+
+/* Tables */
+.table-royal { width: 100%; border-collapse: collapse; font-family: 'Jost'; }
+.table-royal th { color: var(--text-secondary); font-weight: 500; font-size: 13px; padding: 12px 16px; border-bottom: 1px solid rgba(201,168,76,0.15); text-align: left; }
+.table-royal td { padding: 14px 16px; border-bottom: 1px solid rgba(255,255,255,0.04); font-size: 14px; vertical-align: middle; }
+.table-royal tr:hover td { background: rgba(255,255,255,0.02); }
+
+/* Navbar */
+.navbar {
+  background: #0D0D0D;
+  border-bottom: 1px solid rgba(201,168,76,0.15);
+  height: 64px;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 0 32px;
+  position: sticky;
+  top: 0;
+  z-index: 100;
+}
+
+/* Tabs */
+.tab-btn { padding: 10px 20px; font-family: 'Jost'; cursor: pointer; border: none; background: transparent; color: var(--text-secondary); border-bottom: 2px solid transparent; transition: all 0.2s; }
+.tab-btn.active { color: var(--gold-primary); border-bottom-color: var(--gold-primary); }
+
+/* Responsive */
+@media (max-width: 768px) {
+  .navbar { padding: 0 16px; }
+  .hide-mobile { display: none !important; }
+  .card { padding: 16px; }
+}
+@media (max-width: 1023px) {
+  .admin-sidebar { display: none; }
+  .admin-sidebar.open { display: flex; position: fixed; inset: 0; z-index: 200; }
+}
+
+@keyframes goldFall {
+  0%   { transform: translateY(-20px) rotate(0deg); opacity: 1; }
+  100% { transform: translateY(110vh) rotate(720deg); opacity: 0; }
+}
+@keyframes pulse-gold {
+  0%, 100% { text-shadow: 0 0 20px rgba(201,168,76,.6); }
+  50%       { text-shadow: 0 0 60px rgba(201,168,76,1), 0 0 100px rgba(201,168,76,.4); }
+}
+@keyframes fadeInScale {
+  from { opacity: 0; transform: scale(.85); }
+  to   { opacity: 1; transform: scale(1); }
+}
+.explorer-particle {
+  position: fixed;
+  top: -20px;
+  font-size: 18px;
+  animation: goldFall linear infinite;
+  pointer-events: none;
+  z-index: 9998;
+  user-select: none;
+}
+
+/* Roulette */
+#roulette-container {
+  position: relative;
+  width: 280px;
+  height: 280px;
+  margin: 0 auto;
+  border-radius: 50%;
+  overflow: hidden;
+  box-shadow: 0 10px 30px rgba(0,0,0,0.5);
+}
+@media (max-width: 768px) {
+  #roulette-container {
+    width: 220px;
+    height: 220px;
+  }
+}
+
+@keyframes ballSpiral {
+  0% { cy: 14px; }
+  60% { cy: 14px; }
+  100% { cy: 48px; }
+}
+.ball-spinning {
+  animation: ballSpiral 3s cubic-bezier(0.1, 0.85, 0.25, 1) forwards;
+}
