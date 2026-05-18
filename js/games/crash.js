@@ -9,22 +9,22 @@ let minCrashBet = 10;
 function generateCrashPoint() {
   const r = Math.random();
   
-  // 22% de chance de crash instantané à 1.00 (très punitif)
-  if (r < 0.22) return 1.00;
+  // 10% de chance de crash instantané à 1.00 (standard de l'industrie, beaucoup moins frustrant)
+  if (r < 0.10) return 1.00;
   
-  // 33% de chance de crash très précoce (entre 1.01 et 1.45)
-  if (r < 0.55) {
-    return Math.max(1.01, Math.round((1.01 + Math.random() * 0.44) * 100) / 100);
+  // 20% de chance de crash très précoce (entre 1.01 et 1.25)
+  if (r < 0.30) {
+    return Math.max(1.01, Math.round((1.01 + Math.random() * 0.24) * 100) / 100);
   }
   
-  // 30% de chance de crash moyen (entre 1.46 et 2.50)
-  if (r < 0.85) {
-    return Math.max(1.46, Math.round((1.46 + Math.random() * 1.04) * 100) / 100);
+  // 45% de chance de crash moyen (entre 1.26 et 2.50) -> donne du plaisir de jeu et permet des cashouts rentables
+  if (r < 0.75) {
+    return Math.max(1.26, Math.round((1.26 + Math.random() * 1.24) * 100) / 100);
   }
   
-  // 15% restants : au-dessus de 2.50 avec un aplatissement extrême (de type Pareto très serré)
+  // 25% restants : au-dessus de 2.50 avec une courbe de Pareto modérée (exponentielle 2.0 pour limiter l'extrême)
   const r2 = Math.random();
-  const exponent = 1 / 2.8; // Très forte décroissance pour limiter la hausse
+  const exponent = 1 / 2.0; 
   const val = 2.50 / Math.pow(1 - r2, exponent);
   return Math.max(2.50, Math.round(val * 100) / 100);
 }
@@ -50,16 +50,52 @@ async function renderCrash() {
     
     <div style="display:grid;grid-template-columns:repeat(auto-fit,minmax(280px,1fr));gap:24px;margin-top:24px;" id="crash-layout">
       
-      <!-- GAUCHE : Graphique -->
-      <div class="card" style="display:flex;flex-direction:column;position:relative;min-height:400px;background:#050a05;border-color:rgba(74,222,128,0.2);">
-        <svg id="crash-svg" style="position:absolute;inset:0;width:100%;height:100%;pointer-events:none;" preserveAspectRatio="none">
-          <polyline id="crash-line" points="0,400" fill="none" stroke="#4ade80" stroke-width="4"/>
+      <!-- GAUCHE : Graphique Premium Radar Tactique -->
+      <div class="card" id="crash-radar-card" style="display:flex;flex-direction:column;position:relative;min-height:400px;background:#030703;border-color:rgba(74,222,128,0.25);overflow:hidden;box-shadow:inset 0 0 40px rgba(74,222,128,0.05);background-image:radial-gradient(rgba(74,222,128,0.1) 1px, transparent 1px);background-size:24px 24px;transition:transform 0.05s ease;">
+        <div style="position:absolute;inset:0;background:linear-gradient(180deg, transparent 60%, rgba(74,222,128,0.03) 100%);pointer-events:none;"></div>
+        
+        <svg id="crash-svg" viewBox="0 0 500 300" style="position:absolute;inset:0;width:100%;height:100%;pointer-events:none;" preserveAspectRatio="none">
+          <defs>
+            <!-- Gradient de la courbe neon -->
+            <linearGradient id="curve-glow" x1="0%" y1="0%" x2="100%" y2="100%">
+              <stop offset="0%" stop-color="#22c55e" stop-opacity="0.3"/>
+              <stop offset="100%" stop-color="#4ade80" stop-opacity="1"/>
+            </linearGradient>
+            <!-- Gradient rouge en cas de crash -->
+            <linearGradient id="curve-glow-crashed" x1="0%" y1="0%" x2="100%" y2="100%">
+              <stop offset="0%" stop-color="#ef4444" stop-opacity="0.3"/>
+              <stop offset="100%" stop-color="#f87171" stop-opacity="1"/>
+            </linearGradient>
+            <!-- Gradient de l'aire sous la courbe -->
+            <linearGradient id="area-glow" x1="0%" y1="0%" x2="0%" y2="100%">
+              <stop offset="0%" stop-color="#4ade80" stop-opacity="0.2"/>
+              <stop offset="100%" stop-color="#22c55e" stop-opacity="0.0"/>
+            </linearGradient>
+            <linearGradient id="area-glow-crashed" x1="0%" y1="0%" x2="0%" y2="100%">
+              <stop offset="0%" stop-color="#f87171" stop-opacity="0.2"/>
+              <stop offset="100%" stop-color="#ef4444" stop-opacity="0.0"/>
+            </linearGradient>
+          </defs>
+          
+          <!-- L'aire sous la courbe -->
+          <polygon id="crash-area" points="0,300 0,300" fill="url(#area-glow)" />
+          
+          <!-- La ligne principale néon -->
+          <polyline id="crash-line" points="0,300" fill="none" stroke="url(#curve-glow)" stroke-width="4.5" stroke-linecap="round" style="filter: drop-shadow(0 0 8px rgba(74,222,128,0.5));"/>
+          
+          <!-- Le point ou la fusée de tête -->
+          <g id="crash-rocket-node" transform="translate(0, 300)" style="transition: transform 0.08s linear;">
+            <circle r="8" fill="#fff" style="filter: drop-shadow(0 0 8px #4ade80);" />
+            <circle r="4" fill="#4ade80" id="crash-rocket-core" />
+            <text id="crash-rocket-emoji" x="-9" y="7" font-size="16">🚀</text>
+          </g>
         </svg>
-        <div style="margin:auto;text-align:center;z-index:10;">
-          <div id="crash-mult-display" style="font-family:'Cormorant Garamond';font-size:80px;font-weight:700;color:#4ade80;text-shadow:0 0 20px rgba(74,222,128,0.4);">
+        
+        <div style="margin:auto;text-align:center;z-index:10;pointer-events:none;">
+          <div id="crash-mult-display" style="font-family:'Cormorant Garamond';font-size:84px;font-weight:800;color:#4ade80;text-shadow:0 0 25px rgba(74,222,128,0.4);letter-spacing:1px;transition:transform 0.05s ease;">
             ×1.00
           </div>
-          <div id="crash-status-msg" style="font-family:'Jost';color:var(--text-secondary);font-size:16px;margin-top:16px;height:24px;">
+          <div id="crash-status-msg" style="font-family:'Jost';color:var(--text-secondary);font-size:16px;margin-top:16px;height:24px;font-weight:500;">
             Prêt
           </div>
         </div>
@@ -181,14 +217,75 @@ function updateCrashUI() {
   }
   
   if (line && crashState === 'running') {
-    line.setAttribute('stroke', '#4ade80');
-    // Draw logic (simplified)
-    const points = line.getAttribute('points');
-    const newX = Math.min(800, crashTick * 5); // arbitrary scaling
-    const newY = Math.max(0, 400 - (crashMultiplier - 1) * 100);
-    line.setAttribute('points', `${points} ${newX},${newY}`);
+    const limitX = Math.max(80, crashTick);
+    const limitY = Math.max(2.5, crashMultiplier);
+    
+    let polylinePoints = [];
+    let polygonPoints = ["0,300"];
+    
+    for (let i = 0; i <= crashTick; i++) {
+      const mult = Math.round(Math.pow(1.03, i) * 100) / 100;
+      const px = (i / limitX) * 460;
+      const py = 280 - ((mult - 1) / (limitY - 1)) * 240;
+      polylinePoints.push(`${px},${py}`);
+      polygonPoints.push(`${px},${py}`);
+    }
+    
+    const lastX = (crashTick / limitX) * 460;
+    const lastY = 280 - ((crashMultiplier - 1) / (limitY - 1)) * 240;
+    
+    line.setAttribute('stroke', 'url(#curve-glow)');
+    line.setAttribute('points', polylinePoints.join(' '));
+    
+    polygonPoints.push(`${lastX},300`);
+    const area = document.getElementById('crash-area');
+    if (area) {
+      area.setAttribute('fill', 'url(#area-glow)');
+      area.setAttribute('points', polygonPoints.join(' '));
+    }
+    
+    const rocket = document.getElementById('crash-rocket-node');
+    if (rocket) {
+      rocket.setAttribute('transform', `translate(${lastX}, ${lastY})`);
+    }
+    
+    // Effet de tremblement suspense (tremble plus fort si le multiplicateur grimpe)
+    const card = document.getElementById('crash-radar-card');
+    if (card) {
+      if (crashMultiplier > 2.5) {
+        card.style.transform = `translate(${(Math.random()-0.5)*4.5}px, ${(Math.random()-0.5)*4.5}px)`;
+      } else if (crashMultiplier > 1.4) {
+        card.style.transform = `translate(${(Math.random()-0.5)*2}px, ${(Math.random()-0.5)*2}px)`;
+      } else {
+        card.style.transform = 'none';
+      }
+    }
+    
+    // Zoom dynamique de la valeur
+    const multDisplay = document.getElementById('crash-mult-display');
+    if (multDisplay) {
+      const pulseScale = 1 + (crashMultiplier - 1) * 0.025;
+      multDisplay.style.transform = `scale(${Math.min(1.22, pulseScale)})`;
+    }
+    
   } else if (line && crashState === 'crashed') {
-    line.setAttribute('stroke', '#f87171');
+    line.setAttribute('stroke', 'url(#curve-glow-crashed)');
+    const area = document.getElementById('crash-area');
+    if (area) area.setAttribute('fill', 'url(#area-glow-crashed)');
+    
+    const emoji = document.getElementById('crash-rocket-emoji');
+    if (emoji) emoji.textContent = '💥';
+    
+    const core = document.getElementById('crash-rocket-core');
+    if (core) core.setAttribute('fill', '#f87171');
+    
+    const card = document.getElementById('crash-radar-card');
+    if (card) card.style.transform = 'none';
+    
+  } else if (line && crashState === 'cashed_out') {
+    line.setAttribute('stroke', 'var(--gold-primary)');
+    const card = document.getElementById('crash-radar-card');
+    if (card) card.style.transform = 'none';
   }
 }
 
@@ -204,7 +301,15 @@ async function startCrash() {
   crashTick = 0;
   
   const line = document.getElementById('crash-line');
-  if (line) line.setAttribute('points', '0,400');
+  if (line) line.setAttribute('points', '0,300');
+  const area = document.getElementById('crash-area');
+  if (area) area.setAttribute('points', '0,300 0,300');
+  
+  const emoji = document.getElementById('crash-rocket-emoji');
+  if (emoji) emoji.textContent = '🚀';
+  
+  const core = document.getElementById('crash-rocket-core');
+  if (core) core.setAttribute('fill', '#4ade80');
   
   updateCrashUI();
 
@@ -301,7 +406,27 @@ async function handleCrash() {
 function resetCrash() {
   crashState = 'idle';
   crashMultiplier = 1.00;
+  
   const line = document.getElementById('crash-line');
-  if (line) line.setAttribute('points', '0,400');
+  if (line) line.setAttribute('points', '0,300');
+  
+  const area = document.getElementById('crash-area');
+  if (area) area.setAttribute('points', '0,300 0,300');
+  
+  const emoji = document.getElementById('crash-rocket-emoji');
+  if (emoji) emoji.textContent = '🚀';
+  
+  const rocket = document.getElementById('crash-rocket-node');
+  if (rocket) rocket.setAttribute('transform', 'translate(0, 300)');
+  
+  const core = document.getElementById('crash-rocket-core');
+  if (core) core.setAttribute('fill', '#4ade80');
+  
+  const card = document.getElementById('crash-radar-card');
+  if (card) card.style.transform = 'none';
+  
+  const multDisplay = document.getElementById('crash-mult-display');
+  if (multDisplay) multDisplay.style.transform = 'none';
+  
   updateCrashUI();
 }
