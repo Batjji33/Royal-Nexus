@@ -165,8 +165,8 @@ async function renderRoulette() {
         <div style="display:flex;flex-wrap:wrap;gap:8px;margin-bottom:16px;">
           ${betBtn('red','Rouge','#8B0000')}
           ${betBtn('black','Noir','#1a1a1a')}
-          ${betBtn('odd','Pair','transparent')}
-          ${betBtn('even','Impair','transparent')}
+          ${betBtn('even','Pair','transparent')}
+          ${betBtn('odd','Impair','transparent')}
           ${betBtn('low','1–18','transparent')}
           ${betBtn('high','19–36','transparent')}
         </div>
