@@ -9,23 +9,22 @@ let minCrashBet = 10;
 function generateCrashPoint() {
   const r = Math.random();
   
-  // 10% de chance de crash instantané à 1.00 (standard de l'industrie, beaucoup moins frustrant)
+  // 10% de chance de crash instantané à 1.00 (standard de l'industrie, peu frustrant)
   if (r < 0.10) return 1.00;
   
-  // 20% de chance de crash très précoce (entre 1.01 et 1.25)
-  if (r < 0.30) {
-    return Math.max(1.01, Math.round((1.01 + Math.random() * 0.24) * 100) / 100);
+  // 25% de chance de crash précoce (entre 1.01 et 1.30)
+  if (r < 0.35) {
+    return Math.max(1.01, Math.round((1.01 + Math.random() * 0.29) * 100) / 100);
   }
   
-  // 45% de chance de crash moyen (entre 1.26 et 2.50) -> donne du plaisir de jeu et permet des cashouts rentables
-  if (r < 0.75) {
-    return Math.max(1.26, Math.round((1.26 + Math.random() * 1.24) * 100) / 100);
+  // 53% de chance de crash moyen (entre 1.31 et 2.50) -> permet de jolis cashouts
+  if (r < 0.88) {
+    return Math.max(1.31, Math.round((1.31 + Math.random() * 1.19) * 100) / 100);
   }
   
-  // 25% restants : au-dessus de 2.50 avec une courbe de Pareto modérée (exponentielle 2.0 pour limiter l'extrême)
+  // 12% restants : au-dessus de 2.50 avec un plafond absolu et strict à x7.50
   const r2 = Math.random();
-  const exponent = 1 / 2.0; 
-  const val = 2.50 / Math.pow(1 - r2, exponent);
+  const val = 2.50 + Math.pow(r2, 3) * 5.00;
   return Math.max(2.50, Math.round(val * 100) / 100);
 }
 
