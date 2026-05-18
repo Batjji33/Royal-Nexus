@@ -31,28 +31,75 @@ async function renderLobby() {
     new Date(last).toDateString() === new Date().toDateString();
 
   const allDone = dayCount.roulette>=5 && dayCount.slots>=5 && dayCount.crash>=5;
+  const isLucky = settings.explorer_bonus_lucky_day === 'true';
   const bonusAmount = settings.explorer_bonus_amount || 50;
 
-  const progressHTML = `
-  <div class="card" style="margin-top:32px;">
-    <div style="display:flex;align-items:center;justify-content:space-between;
-      flex-wrap:wrap;gap:12px;margin-bottom:20px;">
-      <div>
-        <h3 style="font-family:'Cinzel';color:var(--gold-primary);font-size:16px;
-          letter-spacing:1px;">BONUS EXPLORER</h3>
-        <p style="font-family:'Jost';color:var(--text-muted);font-size:12px;margin-top:3px;">
-          Jouez 5 parties sur chaque jeu pour gagner ${bonusAmount} coins
-        </p>
-      </div>
-      ${allDone && !claimedToday ? `
+  // Style de la carte
+  const cardStyle = isLucky 
+    ? `margin-top:32px; border: 2px solid rgba(74,222,128,0.4); box-shadow: 0 0 20px rgba(74,222,128,0.15); background: radial-gradient(circle at top right, rgba(34,197,94,0.06) 0%, #080d08 100%);`
+    : `margin-top:32px;`;
+
+  // Titre de la carte
+  const titleHTML = isLucky
+    ? `<div style="display:flex;align-items:center;gap:10px;">
+        <h3 style="font-family:'Cinzel';color:#4ade80;font-size:16px;letter-spacing:1px;margin:0;">🍀 BONUS EXPLORER</h3>
+        <span style="background:linear-gradient(135deg,#16a34a,#4ade80);color:#fff;font-family:'Jost';font-size:10px;font-weight:700;padding:2px 8px;border-radius:10px;letter-spacing:1px;box-shadow:0 0 8px rgba(74,222,128,0.3);">JOUR DE CHANCE !</span>
+       </div>`
+    : `<h3 style="font-family:'Cinzel';color:var(--gold-primary);font-size:16px;letter-spacing:1px;margin:0;">BONUS EXPLORER</h3>`;
+
+  const subTitleHTML = isLucky
+    ? `<p style="font-family:'Jost';color:#86efac;font-size:12px;margin-top:4px;font-weight:500;">
+        🍀 Jour de chance ! Jouez 5 parties sur chaque jeu pour débloquer ce bonus boosté de ${bonusAmount} coins !
+       </p>`
+    : `<p style="font-family:'Jost';color:var(--text-muted);font-size:12px;margin-top:4px;">
+        Jouez 5 parties sur chaque jeu pour gagner ${bonusAmount} coins
+       </p>`;
+
+  // Boutons de droite
+  let actionHTML = '';
+  if (allDone && !claimedToday) {
+    if (isLucky) {
+      actionHTML = `
+        <button onclick="claimExplorerBonus()" style="
+          background:linear-gradient(135deg,#22c55e,#4ade80);
+          color:#080808;font-family:'Jost';font-weight:700;
+          padding:10px 22px;border:none;border-radius:6px;
+          cursor:pointer;font-size:14px;box-shadow:0 0 15px rgba(74,222,128,0.4);
+          animation:pulse-green 1.5s infinite;
+        ">✨ Réclamer mon bonus chance →</button>`;
+    } else {
+      actionHTML = `
         <button onclick="claimExplorerBonus()" style="
           background:linear-gradient(135deg,#C9A84C,#8B6914);
           color:#080808;font-family:'Jost';font-weight:700;
           padding:10px 22px;border:none;border-radius:6px;
           cursor:pointer;font-size:14px;animation:pulse-gold 2s infinite;
-        ">✨ Réclamer →</button>` : claimedToday ? `
-        <span style="font-family:'Jost';color:#2D7A3A;font-size:13px;">✓ Réclamé aujourd'hui</span>
-        ` : ''}
+        ">✨ Réclamer →</button>`;
+    }
+  } else if (claimedToday) {
+    actionHTML = `<span style="font-family:'Jost';color:#2D7A3A;font-size:13px;font-weight:600;">✓ Réclamé aujourd'hui</span>`;
+  } else {
+    actionHTML = isLucky
+      ? `<span style="font-family:'Jost';color:#86efac;font-size:13px;font-weight:600;opacity:0.9;">🎮 Jouez pour débloquer le bonus chance !</span>`
+      : `<span style="font-family:'Jost';color:var(--text-muted);font-size:13px;">🎮 Jouez pour débloquer</span>`;
+  }
+
+  const progressHTML = `
+  <style>
+    @keyframes pulse-green {
+      0% { transform: scale(1); filter: brightness(1); }
+      50% { transform: scale(1.03); filter: brightness(1.2); }
+      100% { transform: scale(1); filter: brightness(1); }
+    }
+  </style>
+  <div class="card" style="${cardStyle}">
+    <div style="display:flex;align-items:center;justify-content:space-between;
+      flex-wrap:wrap;gap:12px;margin-bottom:20px;">
+      <div>
+        ${titleHTML}
+        ${subTitleHTML}
+      </div>
+      ${actionHTML}
     </div>
     <div style="display:flex;flex-direction:column;gap:12px;">
       ${[
@@ -62,18 +109,23 @@ async function renderLobby() {
       ].map(([name, count]) => {
         const pct = Math.min(count / 5 * 100, 100);
         const done = count >= 5;
+        const barColor = done 
+          ? '#2D7A3A' 
+          : isLucky 
+            ? 'linear-gradient(90deg, #15803d, #4ade80)' 
+            : 'linear-gradient(90deg,#8B6914,#C9A84C)';
         return `
         <div>
           <div style="display:flex;justify-content:space-between;margin-bottom:5px;">
             <span style="font-family:'Jost';color:var(--text-secondary);font-size:13px;">${name}</span>
-            <span style="font-family:'Cormorant Garamond';color:${done?'#4ade80':'var(--gold-primary)'};font-size:14px;">
+            <span style="font-family:'Cormorant Garamond';color:${done?(isLucky?'#4ade80':'#2D7A3A'):'var(--gold-primary)'};font-size:14px;font-weight:600;">
               ${Math.min(count,5)}/5 ${done?'✓':''}
             </span>
           </div>
           <div style="background:var(--bg-secondary);border-radius:4px;height:6px;overflow:hidden;">
             <div style="
               height:100%;width:${pct}%;
-              background:${done?'#2D7A3A':'linear-gradient(90deg,#8B6914,#C9A84C)'};
+              background:${barColor};
               border-radius:4px;transition:width .5s ease;
             "></div>
           </div>
