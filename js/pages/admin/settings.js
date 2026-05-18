@@ -91,6 +91,19 @@ async function renderAdminSettings() {
         <p style="font-family:'Jost';color:var(--text-muted);font-size:12px;margin-top:6px;margin-bottom:14px;line-height:1.4;">
           Accordé chaque jour au joueur ayant joué 5 parties sur chacun des 3 jeux.
         </p>
+        
+        <!-- Lucky Day Explorer Bonus Checkbox -->
+        <div style="margin-top:16px;border-top:1px dashed rgba(201,168,76,0.2);padding-top:14px;margin-bottom:20px;">
+          <label style="display:flex;align-items:center;gap:10px;cursor:pointer;user-select:none;">
+            <input type="checkbox" id="explorer-lucky-day" style="width:18px;height:18px;accent-color:var(--gold-primary);" 
+              ${settings.explorer_bonus_lucky_day === 'true' ? 'checked' : ''}>
+            <span style="font-family:'Jost';color:var(--text-secondary);font-size:14px;font-weight:600;">🍀 Activer le "Jour de chance"</span>
+          </label>
+          <p style="font-family:'Jost';color:var(--text-muted);font-size:12px;margin-top:6px;line-height:1.4;">
+            Active une animation festive dorée/verte ("Lucky Day") et indique aux joueurs que le montant est plus important que d'habitude !
+          </p>
+        </div>
+
         <button class="btn-gold" style="padding:8px 16px;font-size:13px;" onclick="saveBonusSettings()">Enregistrer le bonus</button>
       </div>
 
@@ -209,12 +222,15 @@ async function saveAdminCredentials() {
 
 async function saveBonusSettings() {
   const val = document.getElementById('s-bonus')?.value;
+  const isLucky = document.getElementById('explorer-lucky-day')?.checked ? 'true' : 'false';
+  
   if (!val || isNaN(val) || parseInt(val) < 1) {
     toastError('Montant invalide.'); return;
   }
   try {
     await updateSetting('explorer_bonus_amount', val);
-    toastSuccess('✅ Bonus mis à jour.');
+    await updateSetting('explorer_bonus_lucky_day', isLucky);
+    toastSuccess('✅ Bonus et option Jour de chance mis à jour.');
   } catch(e) {
     toastError('Erreur lors de la sauvegarde.');
   }
