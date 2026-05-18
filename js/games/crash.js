@@ -9,16 +9,16 @@ let minCrashBet = 10;
 function generateCrashPoint() {
   const r = Math.random();
   
-  // 15% de chance de crash instantané à 1.00 (gros bloqueur de spam de cashout)
-  if (r < 0.15) return 1.00;
+  // 18% de chance de crash instantané à 1.00 (bloque le spam de cashout précoce)
+  if (r < 0.18) return 1.00;
   
-  // 20% de chance de crash très précoce (entre 1.01 et 1.15)
-  if (r < 0.35) {
-    return Math.max(1.00, Math.round((1.01 + Math.random() * 0.14) * 100) / 100);
+  // 25% de chance de crash précoce (entre 1.01 et 1.30) pour corser le jeu à bas niveau
+  if (r < 0.43) {
+    return Math.max(1.01, Math.round((1.01 + Math.random() * 0.29) * 100) / 100);
   }
   
-  // Formule classique corsée pour les 65% restants
-  return Math.max(1.00, Math.round((0.78 / (1 - r)) * 100) / 100);
+  // Pour les 57% restants, une distribution avec un multiplicateur classique
+  return Math.max(1.01, Math.round((0.72 / (1 - r)) * 100) / 100);
 }
 
 async function renderCrash() {
