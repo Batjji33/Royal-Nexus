@@ -104,7 +104,10 @@ async function renderAdminSettings() {
           </p>
         </div>
 
-        <button class="btn-gold" style="padding:8px 16px;font-size:13px;" onclick="saveBonusSettings()">Enregistrer le bonus</button>
+        <div style="display:flex;gap:12px;flex-wrap:wrap;">
+          <button class="btn-gold" style="padding:8px 16px;font-size:13px;" onclick="saveBonusSettings()">Enregistrer le bonus</button>
+          <button class="btn-outline-gold" style="padding:8px 16px;font-size:13px;" onclick="testExplorerBonusAnimation()">✨ Tester l'animation</button>
+        </div>
       </div>
 
       <!-- Jackpot Progressif -->
@@ -267,4 +270,10 @@ async function resetJackpot() {
   jackpotCurrent = parseInt(seed);
   updateJackpotDisplays();
   toastSuccess('✅ Jackpot réinitialisé à ' + seed + ' coins.');
+}
+
+function testExplorerBonusAnimation() {
+  const val = parseInt(document.getElementById('s-bonus')?.value || '50');
+  const isLucky = document.getElementById('explorer-lucky-day')?.checked;
+  showExplorerBonusModal(val, isLucky);
 }
