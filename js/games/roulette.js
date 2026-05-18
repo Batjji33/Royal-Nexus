@@ -331,9 +331,9 @@ async function spinRoulette() {
       <div style="font-family:'Cormorant Garamond';font-size:48px;font-weight:700;color:${colorHex};">${result}</div>
       <div style="font-family:'Jost';color:${colorStr==='green'?'#4ade80':colorStr==='red'?'#fca5a5':'var(--text-secondary)'};font-size:14px;margin-top:4px;text-transform:capitalize;">${colorStr}</div>
       <div style="font-family:'Cormorant Garamond';font-size:18px;color:${won?'#4ade80':'#f87171'};margin-top:12px;">
-        ${won ? `✨ Gagné ! +${gainCoins} coins` : `Perdu — ${bet} coins`}
+        ${won ? `✨ Gagné ! +${netCoins} coins` : `Perdu — ${bet} coins`}
       </div>`;
-    won ? toastSuccess(`✨ Gagné ! +${gainCoins} coins`) : toastError(`Perdu — ${bet} coins`);
+    won ? toastSuccess(`✨ Gagné ! +${netCoins} coins`) : toastError(`Perdu — ${bet} coins`);
   } catch(e) {
     toastError('Erreur lors de la partie. Vérifiez votre solde.');
   }
