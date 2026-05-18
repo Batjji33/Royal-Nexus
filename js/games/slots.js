@@ -158,8 +158,8 @@ async function spinSlots() {
   let midRow = [grid[0][1], grid[1][1], grid[2][1]];
   let won = midRow[0].id === midRow[1].id && midRow[1].id === midRow[2].id;
 
-  // Boost Royal Slots : 20% de chance de transformer une défaite en victoire !
-  if (!won && Math.random() < 0.20) {
+  // Boost Royal Slots : 25% de chance de transformer une défaite en victoire !
+  if (!won && Math.random() < 0.25) {
     const luckySymbol = weightedRandom();
     grid[0][1] = luckySymbol;
     grid[1][1] = luckySymbol;
