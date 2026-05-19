@@ -24,11 +24,12 @@ async function renderAdminHistory() {
       </button>
     </div>
     
-    <div style="display:flex;gap:12px;margin-bottom:24px;">
+    <div style="display:flex;gap:12px;margin-bottom:24px;flex-wrap:wrap;">
       <button onclick="navigatePage('#/admin/history?filter=all')" class="${filter==='all'?'btn-gold':'btn-outline-gold'}" style="padding:6px 16px;font-size:13px;">Tous</button>
       <button onclick="navigatePage('#/admin/history?filter=roulette')" class="${filter==='roulette'?'btn-gold':'btn-outline-gold'}" style="padding:6px 16px;font-size:13px;">Roulette</button>
       <button onclick="navigatePage('#/admin/history?filter=slots')" class="${filter==='slots'?'btn-gold':'btn-outline-gold'}" style="padding:6px 16px;font-size:13px;">Machine à Sous</button>
       <button onclick="navigatePage('#/admin/history?filter=crash')" class="${filter==='crash'?'btn-gold':'btn-outline-gold'}" style="padding:6px 16px;font-size:13px;">Crash</button>
+      <button onclick="navigatePage('#/admin/history?filter=mines')" class="${filter==='mines'?'btn-gold':'btn-outline-gold'}" style="padding:6px 16px;font-size:13px;">Mines</button>
     </div>
 
     <div style="display:grid;grid-template-columns:repeat(auto-fit,minmax(200px,1fr));gap:24px;margin-bottom:32px;">
@@ -55,7 +56,7 @@ async function renderAdminHistory() {
         <thead><tr><th>Joueur</th><th>Jeu</th><th>Mise</th><th>Résultat</th><th>Gain/Perte</th><th>Date</th></tr></thead>
         <tbody>
           ${sessions.map(s => {
-            const gameNames = { roulette: 'Roulette', slots: 'Machine à Sous', crash: 'Crash' };
+            const gameNames = { roulette: 'Roulette', slots: 'Machine à Sous', crash: 'Crash', mines: 'Mines' };
             const netColor = s.net_coins > 0 ? '#4ade80' : s.net_coins < 0 ? '#f87171' : 'var(--text-secondary)';
             const sign = s.net_coins > 0 ? '+' : '';
             return `

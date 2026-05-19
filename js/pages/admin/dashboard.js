@@ -70,7 +70,7 @@ async function renderAdminDashboard() {
           <thead><tr><th>Joueur</th><th>Jeu</th><th>Mise</th><th>Résultat</th><th>Net</th><th>Date</th></tr></thead>
           <tbody>
             ${sessions.slice(0, 10).map(s => {
-              const gameNames = { roulette: 'Roulette', slots: 'Machine à Sous', crash: 'Crash' };
+              const gameNames = { roulette: 'Roulette', slots: 'Machine à Sous', crash: 'Crash', mines: 'Mines' };
               const netColor = s.net_coins > 0 ? '#4ade80' : s.net_coins < 0 ? '#f87171' : 'var(--text-secondary)';
               const sign = s.net_coins > 0 ? '+' : '';
               return `

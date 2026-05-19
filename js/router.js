@@ -5,6 +5,7 @@ const routes = {
   '#/games/roulette' : () => requireAuth(renderRoulette),
   '#/games/slots'    : () => requireAuth(renderSlots),
   '#/games/crash'    : () => requireAuth(renderCrash),
+  '#/games/mines'    : () => requireAuth(renderMines),
   '#/wallet'         : () => requireAuth(renderWallet),
   '#/admin'          : () => requireAdmin(renderAdminDashboard),
   '#/admin/purchases': () => requireAdmin(renderAdminPurchases),
