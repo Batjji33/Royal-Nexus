@@ -5,7 +5,6 @@ async function renderLobby() {
   const minRoulette = settings.roulette_min_bet || '5';
   const costSlots   = settings.slots_cost_per_spin || '5';
   const minCrash    = settings.crash_min_bet || '10';
-  const minMines    = settings.mines_min_bet || '10';
   const bal = currentProfile?.balance_coins || 0;
 
   const warningBanner = bal === 0 ? `
@@ -176,9 +175,6 @@ async function renderLobby() {
         `Coût par spin : ${costSlots} coins`,'#/games/slots', bal < parseInt(costSlots))}
       ${crashLobbyCard(minCrash, bal < parseInt(minCrash))}
     </div>
-    
-    ${minesLobbyCard(minMines, bal < parseInt(minMines))}
-    
     ${progressHTML}
   </div>`);
 }
@@ -218,27 +214,6 @@ function crashLobbyCard(minCrash, disabled) {
       <p style="font-family:'Jost';color:var(--gold-primary);font-size:12px;margin-bottom:16px;">Mise minimum : ${minCrash} coins</p>
       <button class="${disabled?'btn-outline-gold':'btn-gold'}" style="font-size:14px;padding:10px 24px;"
         onclick="${disabled?`navigatePage('#/wallet')`:`navigatePage('#/games/crash')`}">
-        ${disabled ? 'Recharger le compte' : 'Jouer →'}
-      </button>
-    </div>
-  </div>`;
-}
-
-function minesLobbyCard(minMines, disabled) {
-  return `
-  <div class="card" style="padding:0;overflow:hidden;min-height:200px;position:relative;cursor:${disabled?'default':'pointer'};
-    background-image:linear-gradient(rgba(0,0,0,0.4),rgba(0,0,0,0.9)),url('mines_lobby_card.png');
-    background-size:cover;background-position:center;margin-top:24px;"
-    onclick="${disabled ? '' : `navigatePage('#/games/mines')`}">
-    ${disabled ? `<div style="position:absolute;inset:0;background:rgba(0,0,0,0.5);z-index:1;"></div>` : ''}
-    <div style="position:absolute;bottom:0;left:0;right:0;padding:28px;z-index:2;display:flex;justify-content:space-between;align-items:flex-end;flex-wrap:wrap;gap:20px;">
-      <div style="max-width:600px;">
-        <h2 style="font-family:'Cinzel';color:#fff;font-size:20px;margin-bottom:8px;">Mines</h2>
-        <p style="font-family:'Jost';color:var(--text-secondary);font-size:14px;margin-bottom:6px;">Désamorcez la grille et encaissez avant d'exploser</p>
-        <p style="font-family:'Jost';color:var(--gold-primary);font-size:12px;margin:0;">Mise minimum : ${minMines} coins</p>
-      </div>
-      <button class="${disabled ? 'btn-outline-gold' : 'btn-gold'}" style="font-size:14px;padding:10px 24px;"
-        onclick="${disabled ? `navigatePage('#/wallet')` : `navigatePage('#/games/mines')`}">
         ${disabled ? 'Recharger le compte' : 'Jouer →'}
       </button>
     </div>

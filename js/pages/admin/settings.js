@@ -21,14 +21,9 @@ async function renderAdminSettings() {
           <input type="number" id="set-slots" class="input-gold" value="${settings.slots_cost_per_spin || '5'}">
         </div>
         
-        <div style="margin-bottom:16px;">
+        <div style="margin-bottom:24px;">
           <label style="font-family:'Jost';color:var(--text-secondary);font-size:13px;display:block;margin-bottom:6px;">Mise minimum Crash (coins)</label>
           <input type="number" id="set-crash" class="input-gold" value="${settings.crash_min_bet || '10'}">
-        </div>
-        
-        <div style="margin-bottom:24px;">
-          <label style="font-family:'Jost';color:var(--text-secondary);font-size:13px;display:block;margin-bottom:6px;">Mise minimum Mines (coins)</label>
-          <input type="number" id="set-mines" class="input-gold" value="${settings.mines_min_bet || '10'}">
         </div>
 
         <button onclick="saveGameSettings()" class="btn-gold" style="width:100%;">Enregistrer les coûts</button>
@@ -166,15 +161,13 @@ async function saveGameSettings() {
   const roulette = document.getElementById('set-roulette').value;
   const slots = document.getElementById('set-slots').value;
   const crash = document.getElementById('set-crash').value;
-  const mines = document.getElementById('set-mines').value;
   
-  if (!roulette || !slots || !crash || !mines) { toastError("Tous les champs doivent être remplis."); return; }
+  if (!roulette || !slots || !crash) { toastError("Tous les champs doivent être remplis."); return; }
   
   try {
     await updateSetting('roulette_min_bet', roulette);
     await updateSetting('slots_cost_per_spin', slots);
     await updateSetting('crash_min_bet', crash);
-    await updateSetting('mines_min_bet', mines);
     toastSuccess("✅ Coûts mis à jour. Applicables immédiatement pour tous les joueurs.");
   } catch(e) {
     toastError("Erreur lors de la mise à jour des paramètres.");
